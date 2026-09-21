@@ -78,15 +78,15 @@
 
   .behind-frame {
     position: absolute;
-    top: -55px;
-    right: -60px;
+    top: -85px;
+    left: 50%;
     width: 78%;
     border-radius: 22px;
     overflow: hidden;
     box-shadow: 0 20px 50px rgba(80, 40, 90, 0.4), 0 0 0 8px #ffffffaa;
     background: #fff;
     z-index: 1;
-    transform: rotate(6deg) translateY(30px) scale(0.85);
+    transform: translateX(-50%) translateY(30px) scale(0.85);
     opacity: 0;
     transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.34,1.56,.64,1);
     pointer-events: none;
@@ -94,7 +94,11 @@
 
   .behind-frame.revealed {
     opacity: 1;
-    transform: rotate(6deg) translateY(0) scale(1);
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  .behind-frame.revealed img.bounce {
+    animation: bounceClick 0.6s ease;
   }
 
   .behind-frame img {
@@ -236,7 +240,7 @@
       <span class="title-flourish">✦ my heart, my sweetest one ✦</span>
       <div class="photo-stack" id="photoStack">
         <div class="behind-frame" id="behindFrame">
-          <img src="images/him.jpg" alt="standing behind her">
+          <img src="images/him.jpg" alt="standing behind her" id="himImg">
         </div>
         <div class="photo-frame" id="photoFrame">
           <img src="images/her.jpg" alt="my basboosa" id="herImg">
@@ -261,16 +265,22 @@
       container.appendChild(el);
     }
 
-    // click her photo: reveal him standing behind her, and bounce her image every click
+    // click her photo: reveal him standing above/behind her, he bounces, then she bounces right after
     const photoFrame = document.getElementById("photoFrame");
     const behindFrame = document.getElementById("behindFrame");
     const herImg = document.getElementById("herImg");
+    const himImg = document.getElementById("himImg");
+
+    function rebounce(el) {
+      el.classList.remove("bounce");
+      void el.offsetWidth; // restart animation
+      el.classList.add("bounce");
+    }
 
     photoFrame.addEventListener("click", () => {
       behindFrame.classList.add("revealed");
-      herImg.classList.remove("bounce");
-      void herImg.offsetWidth; // restart animation
-      herImg.classList.add("bounce");
+      rebounce(himImg);
+      setTimeout(() => rebounce(herImg), 200);
     });
   </script>
 </body>
