@@ -107,6 +107,19 @@
     height: auto;
   }
 
+  .photo-scaler {
+    position: relative;
+    width: 100%;
+    z-index: 5;
+    transform-origin: center bottom;
+    transform: scale(1);
+    transition: transform 0.6s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  .photo-scaler.shrunk {
+    transform: scale(0.8);
+  }
+
   .photo-frame {
     position: relative;
     width: 100%;
@@ -115,7 +128,6 @@
     box-shadow: 0 20px 50px rgba(214, 51, 132, 0.35), 0 0 0 8px #ffffffaa;
     animation: bob 4.5s ease-in-out infinite;
     background: #fff;
-    z-index: 5;
     cursor: pointer;
   }
 
@@ -242,8 +254,10 @@
         <div class="behind-frame" id="behindFrame">
           <img src="images/him.jpg" alt="standing behind her" id="himImg">
         </div>
-        <div class="photo-frame" id="photoFrame">
-          <img src="images/her.jpg" alt="my basboosa" id="herImg">
+        <div class="photo-scaler" id="photoScaler">
+          <div class="photo-frame" id="photoFrame">
+            <img src="images/her.jpg" alt="my basboosa" id="herImg">
+          </div>
         </div>
       </div>
     </div>
@@ -270,6 +284,8 @@
     const behindFrame = document.getElementById("behindFrame");
     const herImg = document.getElementById("herImg");
     const himImg = document.getElementById("himImg");
+    const photoScaler = document.getElementById("photoScaler");
+    let firstClick = true;
 
     function rebounce(el) {
       el.classList.remove("bounce");
@@ -279,6 +295,10 @@
 
     photoFrame.addEventListener("click", () => {
       behindFrame.classList.add("revealed");
+      if (firstClick) {
+        photoScaler.classList.add("shrunk");
+        firstClick = false;
+      }
       rebounce(himImg);
       setTimeout(() => rebounce(herImg), 200);
     });
